@@ -270,27 +270,70 @@ module Digestion =
         //TODO: switch to better list system
     module Table = 
 
+
         let Trypsin =
-            createProtease "Trypsin" (let _p1 = [AminoAcid.Lys;AminoAcid.Arg] |> Set.ofList 
-                                      fun p4 p3 p2 p1 p1' p2' -> 
-                                      match p1,p1' with
-                                      | Some a1,Some a1' -> _p1.Contains(a1) && not (a1' = AminoAcid.Pro)
-                                      | _   -> false                     
-                                      )       
-                 
-        let Lys_C =             
-            createProtease "Lys-C" (let _p1 = [AminoAcid.Lys] |> Set.ofList
-                                    fun p4 p3 p2 p1 p1' p2' -> 
-                                    match p1 with
-                                    | Some a1 -> _p1.Contains(a1)
-                                    | _ -> false
-                                    )    
+            createProtease "Trypsin" 
+                (let _p1 = [AminoAcid.Lys;AminoAcid.Arg] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1) && not (a1' = AminoAcid.Pro)
+                | _   -> false                     
+                )       
+
+        let Trypsin_P =
+            createProtease "Trypsin/P" 
+                (let _p1 = [AminoAcid.Lys;AminoAcid.Arg] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1)
+                | _   -> false                     
+                )   
+        
+        let Lys_C =
+            createProtease "Lys-C" 
+                (let _p1 = [AminoAcid.Lys] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1) && not (a1' = AminoAcid.Pro)
+                | _   -> false                     
+                )
+
+        let Lys_C_P  =
+            createProtease "Lys-C/P" 
+                (let _p1 = [AminoAcid.Lys] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1)
+                | _   -> false                     
+                )
+
+        let Chymotrypsin  =
+            createProtease "Chymotrypsin" 
+                (let _p1 = [AminoAcid.Phe;AminoAcid.Tyr;AminoAcid.Trp;AminoAcid.Leu] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1) && not (a1' = AminoAcid.Pro)
+                | _   -> false                     
+                )
+
+        let PepsinA =
+            createProtease "PepsinA" 
+                (let _p1 = [AminoAcid.Phe;AminoAcid.Leu] |> Set.ofList 
+                fun p4 p3 p2 p1 p1' p2' -> 
+                match p1,p1' with
+                | Some a1,Some a1' -> _p1.Contains(a1)
+                | _   -> false                     
+                )
 
         let getProteaseBy name = 
             match name with 
             | "Trypsin" -> Trypsin 
-            | "Lys-C"   -> Lys_C
-    
+            | "Trypsin/P"   -> Trypsin_P
+            | "Lys-C" -> Lys_C 
+            | "Lys-C/P"   -> Lys_C_P
+            | "Chymotrypsin" -> Chymotrypsin 
+            | "PepsinA"   -> PepsinA
+            | _ -> failwith (sprintf "Protease with name:%s is not implemented yet. You can use Digestion.createProtease to implement it." name)
     
     // Implementation of CleavageScore [ref: Prediction of Missed Cleavage Sites in Tryptic Peptides Aids Protein Identification in Proteomics
     //                                       Jennifer A. Siepen,1 Emma-Jayne Keevil,1 David Knight,1 and Simon J. Hubbard 
